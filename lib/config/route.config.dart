@@ -1,4 +1,4 @@
-import 'package:nelongso_app/features/init/routes/init.route.dart';
+import 'package:nelongso_app/features/init/route/init.route.dart';
 import 'package:sailor/sailor.dart';
 
 class RouteConfig {
