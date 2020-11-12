@@ -3,6 +3,7 @@ import 'package:nelongso_app/core/app.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:nelongso_app/features/auth/screen/login.screen.dart';
 import 'package:nelongso_app/features/init/screen/init.screen.dart';
 
 class MainApp extends StatelessWidget {
@@ -25,7 +26,7 @@ class MainApp extends StatelessWidget {
                 accentColor: ColorUtils.accentColor,
               ),
               title: 'Nelongso App',
-              home: InitScreen(),
+              home: LoginScreen(),
               onGenerateRoute: App.main.router.generator(),
               navigatorKey: App.main.router.navigatorKey,
             );

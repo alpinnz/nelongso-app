@@ -8,13 +8,13 @@ import 'package:sailor/sailor.dart';
 class RouteConfigInit {
   static final List<SailorRoute> routes = <SailorRoute>[
     SailorRoute(
-      name: RouteConfig.INIT_ROUTE,
+      name: RouteConfig.INIT,
       builder: (context, args, params) {
         return InitScreen();
       },
     ),
     SailorRoute(
-      name: RouteConfig.SPLASH_ROUTE,
+      name: RouteConfig.SPLASH,
       builder: (context, args, params) {
         return SplashScreen();
       },
@@ -24,9 +24,9 @@ class RouteConfigInit {
   static void navigateToInit(BuildContext context, {bool clearStack = false}) {
     if (clearStack) {
       Navigator.of(context).pushNamedAndRemoveUntil(
-          RouteConfig.INIT_ROUTE, (Route<dynamic> route) => false);
+          RouteConfig.INIT, (Route<dynamic> route) => false);
     } else {
-      App.main.router.navigate(RouteConfig.INIT_ROUTE);
+      App.main.router.navigate(RouteConfig.INIT);
     }
   }
 
@@ -34,9 +34,9 @@ class RouteConfigInit {
       {bool clearStack = false}) {
     if (clearStack) {
       Navigator.of(context).pushNamedAndRemoveUntil(
-          RouteConfig.SPLASH_ROUTE, (Route<dynamic> route) => false);
+          RouteConfig.SPLASH, (Route<dynamic> route) => false);
     } else {
-      App.main.router.navigate(RouteConfig.SPLASH_ROUTE);
+      App.main.router.navigate(RouteConfig.SPLASH);
     }
   }
 }
