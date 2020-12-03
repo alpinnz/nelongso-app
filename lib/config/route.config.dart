@@ -23,6 +23,7 @@ class RouteConfig {
   //BISDEV routes
   static const BISDEV = '/bisdev';
   static const BISDEV_INVESTOR = '/bisdev/investor';
+  static const BISDEV_INVESTOR_DETAIL = '/bisdev/investo/detail';
   static const BISDEV_OUTLET = '/bisdev/outlet';
 
   //FINANCE routes

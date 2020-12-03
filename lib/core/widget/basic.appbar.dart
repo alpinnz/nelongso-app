@@ -31,6 +31,12 @@ class BasicAppbarState extends State<BasicAppbar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
+      actionsIconTheme: IconThemeData(
+        size: SizeConfig.imageSizeMultiplier * 6.25,
+        color: Colors.black,
+        opacity: 10.0,
+      ),
       bottom: widget.tabBar != null ? widget.tabBar : null,
       elevation: widget.elevation,
       backgroundColor: widget.bgcolor,

@@ -1,33 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
 import 'package:nelongso_app/core/widget/basic.appbar.dart';
-import 'package:nelongso_app/core/widget/failed.host.view.dart';
-import 'package:nelongso_app/core/widget/loading.page.indicator.dart';
-import 'package:nelongso_app/features/bisdev/bloc/outlet_bloc.dart';
-import 'package:nelongso_app/features/bisdev/model/outlet.model.dart';
+import 'package:nelongso_app/features/bisdev/model/investor.model.dart';
+import 'package:sailor/sailor.dart';
 
-class OutletScreen extends StatefulWidget {
-  @override
-  _OutletScreenState createState() => _OutletScreenState();
-}
-
-class _OutletScreenState extends State<OutletScreen> {
-  final OutletBloc _bloc = OutletBloc();
-
-  @override
-  void initState() {
-    _bloc.add(FetchAll());
-    super.initState();
-  }
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
+class InvestorDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final data = Sailor.param<InvestorModel>(context, 'data');
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: ColorUtils.bgColor,
       appBar: PreferredSize(
         preferredSize: const Size(double.infinity, kToolbarHeight),
@@ -39,94 +21,72 @@ class _OutletScreenState extends State<OutletScreen> {
             appbarType: AppbarType.BACK_BUTTON,
             colorAppbarType: ColorUtils.whiteColor,
             bgcolor: ColorUtils.primaryColor,
-            title: "Investor Management",
+            title: "Detail",
             titlecolor: ColorUtils.lightColor,
             onClickEvent: () => Navigator.of(context).pop(),
           ),
         ),
       ),
-      body: _buildBloc(),
+      body: _buildContent(context, data),
     );
   }
 
-  void _showSnackBar(var text) {
-    scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(text)));
-  }
-
-  Widget _buildBloc() {
-    return BlocProvider(
-      create: (_) => _bloc,
-      child: BlocListener<OutletBloc, OutletState>(
-        listener: (context, state) {
-          if (state is OutletError) {
-            _showSnackBar(state.message);
-          } else if (state is OutletLoaded) {
-            _showSnackBar(
-              'Load data Outlet Profiles',
-            );
-          }
-        },
-        child: BlocBuilder<OutletBloc, OutletState>(
-          builder: (context, state) {
-            if (state is OutletInitial) {
-              return Center(child: LoadingPageIndicator());
-            } else if (state is OutletLoading) {
-              return Center(child: LoadingPageIndicator());
-            } else if (state is OutletLoaded) {
-              return _buildCard(context, state.listOutlet);
-            } else if (state is OutletError) {
-              return FailedHostView(state: state);
-            } else {
-              return Container();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCard(BuildContext context, List<OutletModel> model) {
+  Widget _buildContent(BuildContext context, InvestorModel _data) {
     return Container(
       margin: EdgeInsets.symmetric(
-        vertical: SizeConfig.heightMultiplier * 0.25,
-        horizontal: SizeConfig.widthMultiplier * 0.5,
+        vertical: SizeConfig.heightMultiplier * 1,
+        horizontal: SizeConfig.widthMultiplier * 2,
       ),
-      child: ListView.builder(
-        itemCount: model.length,
-        itemBuilder: (BuildContext context, int index) {
-          final data = model[index];
-          return Container(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
-            decoration: BoxDecoration(
-              color: ColorUtils.bgColor,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 2.5,
-                  blurRadius: 2,
-                  offset: Offset(0, 1), // changes position of shadow
-                ),
-              ],
-            ),
-            child: ListTile(
-              title: Text('${data.namaMitra}'),
-              subtitle: Text('${data.alamat}'),
-              onTap: () => _onTap(context, data),
-              leading: Icon(
-                Icons.person,
-                size: SizeConfig.imageSizeMultiplier * 10,
-                color: ColorUtils.primaryTextColor,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _textView('Nama', _data.namaMitra),
+            _textView('NIK', _data.nik),
+            _textView('NPWP', _data.npwp),
+            _textView('Alamat', _data.alamatMitra),
+            _textView('No Rekening', _data.noRekening),
+            _textView('AN Rekening', _data.anRekening),
+            _textView('Bank', _data.bank),
+            _textView('Outlets', _data.outlets.length.toString()),
+            Container(
+              margin: EdgeInsets.symmetric(
+                vertical: SizeConfig.heightMultiplier * 1,
               ),
-              trailing: Icon(
-                Icons.chevron_right,
-                size: SizeConfig.imageSizeMultiplier * 10,
-                color: ColorUtils.primaryTextColor,
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text('List Outlets'),
+                  ),
+                  ListView.builder(
+                    itemCount: _data.outlets.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      final data = _data.outlets[index];
+                      // return Text(data.namaOutlet);
+                      return ListTile(
+                        title: Text('${data.namaOutlet}'),
+                        subtitle: Text('${data.alamat}'),
+                        onTap: () => _onTap(context, data),
+                        leading: Icon(
+                          Icons.business_center_outlined,
+                          size: SizeConfig.imageSizeMultiplier * 10,
+                          color: ColorUtils.primaryTextColor,
+                        ),
+                        trailing: Icon(
+                          Icons.chevron_right,
+                          size: SizeConfig.imageSizeMultiplier * 10,
+                          color: ColorUtils.primaryTextColor,
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
@@ -172,7 +132,7 @@ class _OutletScreenState extends State<OutletScreen> {
     );
   }
 
-  void _onTap(context, OutletModel _data) {
+  void _onTap(context, Outlets _data) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
