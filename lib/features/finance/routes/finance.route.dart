@@ -33,7 +33,7 @@ class RouteConfigFinance {
     SailorRoute(
       name: RouteConfig.FINANCE_GENERAL_NONCASH,
       builder: (context, args, params) {
-        return NonCashScreen();
+        return NoncashScreen();
       },
     ),
     SailorRoute(

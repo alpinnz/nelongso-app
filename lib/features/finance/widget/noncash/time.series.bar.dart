@@ -149,17 +149,3 @@ class TimeSeriesBar extends StatelessWidget {
     return result;
   }
 }
-// charts.Series<TimeSeriesSales, DateTime>(
-//   id: 'Sales',
-//   colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-//   domainFn: (TimeSeriesSales sales, _) => sales.time,
-//   measureFn: (TimeSeriesSales sales, _) => sales.sales,
-//   data: data,
-// ),
-
-// class TimeSeriesSales {
-//   final DateTime time;
-//   final double sales;
-
-//   TimeSeriesSales({this.time, this.sales});
-// }

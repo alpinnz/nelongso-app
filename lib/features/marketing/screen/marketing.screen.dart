@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
 import 'package:nelongso_app/core/widget/basic.appbar.dart';
-import 'package:nelongso_app/features/bisdev/routes/bisdev.route.dart';
-import 'package:nelongso_app/features/finance/routes/finance.route.dart';
 import 'package:nelongso_app/features/marketing/routes/marketing.route.dart';
 
 class MarketingScreen extends StatelessWidget {
@@ -21,7 +19,7 @@ class MarketingScreen extends StatelessWidget {
             appbarType: AppbarType.BACK_BUTTON,
             colorAppbarType: ColorUtils.whiteColor,
             bgcolor: ColorUtils.primaryColor,
-            title: "Keuangan",
+            title: "Marketing",
             titlecolor: ColorUtils.lightColor,
             onClickEvent: () => Navigator.of(context).pop(),
           ),

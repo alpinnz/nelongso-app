@@ -1,14 +1,135 @@
 import 'package:flutter/material.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
+import 'package:nelongso_app/core/widget/basic.appbar.dart';
 import 'package:nelongso_app/features/finance/model/analytics.target.model.dart';
+import 'package:nelongso_app/features/finance/model/chart.item.model.dart';
+import 'package:nelongso_app/features/finance/widget/noncash/time.series.bar.dart';
 
 class ListCardTarget extends StatelessWidget {
   final List<AnalyticsTargetModel> model;
-  const ListCardTarget({Key key, this.model}) : super(key: key);
+  final int year;
+  final int month;
+
+  const ListCardTarget({Key key, this.model, this.year, this.month})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    _newTitle(String _title) {
+      return "${_title.substring(0, 1).toUpperCase()}${_title.substring(1).toLowerCase()}";
+    }
+
+    void _barWidget(BuildContext context, AnalyticsTargetModel _data) async {
+      List<DataRow> listDataTable = _data.data.map(
+        (e) {
+          var dataRow = DataRow(
+            cells: <DataCell>[
+              // DataCell(Text('${e.id}')),
+              DataCell(Text('${e.bulan}')),
+              DataCell(Text('${e.value}')),
+            ],
+          );
+          return dataRow;
+        },
+      ).toList();
+
+      List<ChartItemModel> _dataChartItem = [
+        ChartItemModel(
+          id: 'goresto',
+          color: 'blue',
+          label: 'goresto',
+          chartItem: _data.data
+              .map((e) => ChartItem(
+                  date: DateTime(year, month, int.parse(e.id)),
+                  value: double.parse(e.value)))
+              .toList(),
+        )
+      ];
+
+      showDialog(
+        context: context,
+        child: Scaffold(
+          backgroundColor: ColorUtils.bgColor,
+          appBar: PreferredSize(
+            preferredSize: const Size(double.infinity, kToolbarHeight),
+            child: SafeArea(
+              left: false,
+              right: false,
+              bottom: false,
+              child: BasicAppbar(
+                appbarType: AppbarType.BACK_BUTTON,
+                colorAppbarType: ColorUtils.whiteColor,
+                bgcolor: ColorUtils.primaryColor,
+                title: _newTitle(_data.outlet),
+                titlecolor: ColorUtils.lightColor,
+                onClickEvent: () => Navigator.pop(context, true),
+              ),
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.heightMultiplier * 1,
+                    bottom: SizeConfig.heightMultiplier * 0.1,
+                  ),
+                  child: Text(
+                    'Analytics Target Omset',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: SizeConfig.textMultiplier * 2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(
+                    left: SizeConfig.widthMultiplier * 1.0,
+                  ),
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: TimeSeriesBar(
+                    TimeSeriesBar.createData(_dataChartItem),
+                    animate: true,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: DataTable(
+                    columnSpacing: 40,
+                    columns: <DataColumn>[
+                      DataColumn(
+                        label: Text(
+                          "Date",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          "Data",
+                          style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                    rows: listDataTable,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: SizeConfig.heightMultiplier * 0.25,
@@ -17,7 +138,7 @@ class ListCardTarget extends StatelessWidget {
       child: ListView.builder(
         itemCount: model.length,
         itemBuilder: (BuildContext context, int index) {
-          final data = model[index];
+          final dataSelected = model[index];
           return Container(
             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
             decoration: BoxDecoration(
@@ -33,11 +154,11 @@ class ListCardTarget extends StatelessWidget {
               ],
             ),
             child: ListTile(
-              title: Text('${data.outlet}'),
-              subtitle: Text('${data.regional}'),
-              // onTap: () => _onTap(context, data),
+              title: Text(_newTitle(dataSelected.outlet)),
+              subtitle: Text(_newTitle(dataSelected.regional)),
+              onTap: () => _barWidget(context, dataSelected),
               leading: Icon(
-                Icons.person,
+                Icons.business_center_outlined,
                 size: SizeConfig.imageSizeMultiplier * 10,
                 color: ColorUtils.primaryTextColor,
               ),

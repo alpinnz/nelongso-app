@@ -24,14 +24,12 @@ dependencies:
   flutter:
     sdk: flutter
   charts_flutter: ^0.9.0
-  connectivity: ^2.0.1
   cupertino_icons: ^1.0.0
   dio: ^3.0.10
   equatable: ^1.2.5
   flutter_bloc: ^6.1.1
+  fluttertoast: ^7.1.5
   get_it: ^5.0.1
-  menu_button: ^1.2.1
-  month_picker_dialog: ^0.3.3
   provider: ^4.3.2+2
   sailor: ^0.7.1
   shared_preferences: ^0.5.12+4

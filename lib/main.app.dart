@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nelongso_app/core/app.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:nelongso_app/features/home/screen/home.screen.dart';
 
 class MainApp extends StatelessWidget {
@@ -15,11 +15,6 @@ class MainApp extends StatelessWidget {
             SizeConfig().init(constraints, orientation);
             App().init();
             return MaterialApp(
-              localizationsDelegates: [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
               theme: ThemeData(
                 primaryColor: ColorUtils.primaryColor,
                 accentColor: ColorUtils.accentColor,

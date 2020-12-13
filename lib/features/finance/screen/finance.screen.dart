@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
 import 'package:nelongso_app/core/widget/basic.appbar.dart';
-import 'package:nelongso_app/features/bisdev/routes/bisdev.route.dart';
 import 'package:nelongso_app/features/finance/routes/finance.route.dart';
 
 class FinanceScreen extends StatelessWidget {

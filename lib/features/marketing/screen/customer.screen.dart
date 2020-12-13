@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
-import 'package:nelongso_app/core/utils/size_config.dart';
 import 'package:nelongso_app/core/widget/basic.appbar.dart';
 
 class CustomerScreen extends StatelessWidget {
