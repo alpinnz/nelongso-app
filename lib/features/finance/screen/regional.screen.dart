@@ -8,7 +8,15 @@ import 'package:nelongso_app/core/widget/failed.host.view.dart';
 import 'package:nelongso_app/core/widget/loading.page.indicator.dart';
 import 'package:nelongso_app/core/widget/dialog.custom.dart';
 import 'package:nelongso_app/core/widget/toast.custom.dart';
-import 'package:nelongso_app/features/finance/bloc/allregional_bloc.dart';
+import 'package:nelongso_app/features/finance/bloc/regional_bloc.dart';
+import 'package:nelongso_app/features/finance/widget/regional/list.card.hpp.dart';
+import 'package:nelongso_app/features/finance/widget/regional/list.card.kunjungan.dart';
+import 'package:nelongso_app/features/finance/widget/regional/list.card.menu.dart';
+import 'package:nelongso_app/features/finance/widget/regional/list.card.omzetofflineandonline.dart';
+import 'package:nelongso_app/features/finance/widget/regional/list.card.omzetpershift.dart';
+import 'package:nelongso_app/features/finance/widget/regional/list.card.operasional.dart';
+import 'package:nelongso_app/features/finance/widget/regional/list.card.outlet.dart';
+import 'package:nelongso_app/features/finance/widget/regional/list.card.persentasekunjungan.dart';
 
 class RegionalScreen extends StatefulWidget {
   @override
@@ -16,11 +24,19 @@ class RegionalScreen extends StatefulWidget {
 }
 
 class _RegionalScreenState extends State<RegionalScreen> {
-  final AllregionalBloc _bloc = AllregionalBloc();
-  int yearSelected = 0;
-  int monthSelected = 0;
-  int sheetSelected = 0;
-  int regionalSelected = 0;
+  final RegionalBloc _bloc = RegionalBloc();
+  int yearSelected;
+  int monthSelected;
+  int sheetSelected;
+  int regionalSelected;
+  @override
+  void initState() {
+    super.initState();
+    yearSelected = 0;
+    monthSelected = 0;
+    sheetSelected = 0;
+    regionalSelected = 0;
+  }
 
   List<String> regionalLists = [
     null,
@@ -50,16 +66,14 @@ class _RegionalScreenState extends State<RegionalScreen> {
   ];
   List<String> sheetLists = [
     null,
-    "DATA",
-    "SHARE PROFIT & BEP",
-    "MINGGU 1",
-    "MINGGU 2",
-    "MINGGU 3",
-    "MINGGU 4",
-    "MINGGU 5",
-    "BIAYA TAMBAHAN",
-    "FINAL",
-    "PPH",
+    "REKAP OUTLET BULANAN",
+    "REKAP HPP SUPPLIER",
+    "REKAP OMZET OFFLINE & ONLINE",
+    "REKAP KUNJUNGAN",
+    "PERSENTASE KUNJUNGAN",
+    "REKAP OPERASIONAL",
+    "REKAP OMZET PER SHIFT",
+    "REKAP MENU YANG TERJUAL",
   ];
 
   @override
@@ -101,7 +115,7 @@ class _RegionalScreenState extends State<RegionalScreen> {
     }).toList();
 
     List<RadioModel> regionals = regionalLists.map((e) {
-      var i = yearLists.indexOf(e);
+      var i = regionalLists.indexOf(e);
       return RadioModel(
         id: i,
         title: '$e',
@@ -109,7 +123,6 @@ class _RegionalScreenState extends State<RegionalScreen> {
         value: '$e',
       );
     }).toList();
-
     List<RadioModel> months = monthLists.map((e) {
       var i = monthLists.indexOf(e);
       var title = '';
@@ -308,41 +321,57 @@ class _RegionalScreenState extends State<RegionalScreen> {
       );
     } else {
       if (sheetSelected == 1) {
-        _bloc.add(FetchAllData(
+        _bloc.add(FetchAllOutlet(
+          regional: regionalLists[regionalSelected],
           year: yearLists[yearSelected],
           month: monthLists[monthSelected],
           sheet: sheetLists[sheetSelected],
         ));
       } else if (sheetSelected == 2) {
-        _bloc.add(FetchAllShare(
+        _bloc.add(FetchAllHpp(
+          regional: regionalLists[regionalSelected],
           year: yearLists[yearSelected],
           month: monthLists[monthSelected],
           sheet: sheetLists[sheetSelected],
         ));
-      } else if (sheetSelected == 3 ||
-          sheetSelected == 4 ||
-          sheetSelected == 5 ||
-          sheetSelected == 6 ||
-          sheetSelected == 7) {
-        _bloc.add(FetchAllWeak(
+      } else if (sheetSelected == 3) {
+        _bloc.add(FetchAllOmzetofflineandonline(
+          regional: regionalLists[regionalSelected],
+          year: yearLists[yearSelected],
+          month: monthLists[monthSelected],
+          sheet: sheetLists[sheetSelected],
+        ));
+      } else if (sheetSelected == 4) {
+        _bloc.add(FetchAllKunjungan(
+          regional: regionalLists[regionalSelected],
+          year: yearLists[yearSelected],
+          month: monthLists[monthSelected],
+          sheet: sheetLists[sheetSelected],
+        ));
+      } else if (sheetSelected == 5) {
+        _bloc.add(FetchAllPersentasekunjungan(
+          regional: regionalLists[regionalSelected],
+          year: yearLists[yearSelected],
+          month: monthLists[monthSelected],
+          sheet: sheetLists[sheetSelected],
+        ));
+      } else if (sheetSelected == 6) {
+        _bloc.add(FetchAllOperasional(
+          regional: regionalLists[regionalSelected],
+          year: yearLists[yearSelected],
+          month: monthLists[monthSelected],
+          sheet: sheetLists[sheetSelected],
+        ));
+      } else if (sheetSelected == 7) {
+        _bloc.add(FetchAllOmzetpershift(
+          regional: regionalLists[regionalSelected],
           year: yearLists[yearSelected],
           month: monthLists[monthSelected],
           sheet: sheetLists[sheetSelected],
         ));
       } else if (sheetSelected == 8) {
-        _bloc.add(FetchAllBiaya(
-          year: yearLists[yearSelected],
-          month: monthLists[monthSelected],
-          sheet: sheetLists[sheetSelected],
-        ));
-      } else if (sheetSelected == 9) {
-        _bloc.add(FetchAllFinal(
-          year: yearLists[yearSelected],
-          month: monthLists[monthSelected],
-          sheet: sheetLists[sheetSelected],
-        ));
-      } else if (sheetSelected == 10) {
-        _bloc.add(FetchAllPph(
+        _bloc.add(FetchAllMenu(
+          regional: regionalLists[regionalSelected],
           year: yearLists[yearSelected],
           month: monthLists[monthSelected],
           sheet: sheetLists[sheetSelected],
@@ -350,37 +379,72 @@ class _RegionalScreenState extends State<RegionalScreen> {
       }
       return BlocProvider(
         create: (_) => _bloc,
-        child: BlocListener<AllregionalBloc, AllregionalState>(
+        child: BlocListener<RegionalBloc, RegionalState>(
           listener: (context, state) {
             final error =
                 'Year ${yearLists[yearSelected]}, Month ${monthLists[monthSelected]}, Sheet ${sheetLists[sheetSelected]}';
-            if (state is AllregionalError) {
+            if (state is RegionalError) {
               ToastCustom(context).showDefault(msg: state.message);
-            } else if (state is! AllregionalInitial ||
-                state is! AllregionalLoading) {
+            } else if (state is! RegionalInitial || state is! RegionalLoading) {
               ToastCustom(context).showDefault(msg: error.toString());
             }
           },
-          child: BlocBuilder<AllregionalBloc, AllregionalState>(
+          child: BlocBuilder<RegionalBloc, RegionalState>(
             builder: (context, state) {
-              if (state is AllregionalInitial) {
+              if (state is RegionalInitial) {
                 return Center(child: LoadingPageIndicator());
-              } else if (state is AllregionalLoading) {
+              } else if (state is RegionalLoading) {
                 return Center(child: LoadingPageIndicator());
-              } else if (state is AllregionalError) {
+              } else if (state is RegionalError) {
                 return FailedHostView(state: state.message);
-              } else if (state is AllregionalDataLoaded) {
-                return Text('Data');
-              } else if (state is AllregionalShareLoaded) {
-                return Text('Share');
-              } else if (state is AllregionalWeakLoaded) {
-                return Text('Weak');
-              } else if (state is AllregionalBiayaLoaded) {
-                return Text('Biaya');
-              } else if (state is AllregionalFinalLoaded) {
-                return Text('Final');
-              } else if (state is AllregionalPphLoaded) {
-                return Text('Pph');
+              } else if (state is RegionalOutletLoaded) {
+                return ListCardOutlet(
+                  model: state.regionalOutlet,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is RegionalHppLoaded) {
+                return ListCardHpp(
+                  model: state.regionalHpp,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is RegionalOmzetofflineandonlineLoaded) {
+                return ListCardOmzetofflineandonline(
+                  model: state.regionalOmzetofflineandonline,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is RegionalKunjunganLoaded) {
+                return ListCardKunjungan(
+                  model: state.regionalKunjungan,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is RegionalPersentasekunjunganLoaded) {
+                return ListCardPersentasekunjungan(
+                  model: state.regionalPersentaseKunjungan,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is RegionalOperasionalLoaded) {
+                return ListCardOperasional(
+                  model: state.regionalOperasional,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is RegionalOmzetpershiftLoaded) {
+                return ListCardOmzetpershift(
+                  model: state.regionalOmzetpershift,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is RegionalMenuLoaded) {
+                return ListCardMenu(
+                  model: state.regionalMenu,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
               } else {
                 return Container();
               }

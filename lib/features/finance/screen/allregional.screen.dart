@@ -9,6 +9,12 @@ import 'package:nelongso_app/core/widget/loading.page.indicator.dart';
 import 'package:nelongso_app/core/widget/dialog.custom.dart';
 import 'package:nelongso_app/core/widget/toast.custom.dart';
 import 'package:nelongso_app/features/finance/bloc/allregional_bloc.dart';
+import 'package:nelongso_app/features/finance/widget/allregional/list.card.biaya.dart';
+import 'package:nelongso_app/features/finance/widget/allregional/list.card.data.dart';
+import 'package:nelongso_app/features/finance/widget/allregional/list.card.final.dart';
+import 'package:nelongso_app/features/finance/widget/allregional/list.card.pph.dart';
+import 'package:nelongso_app/features/finance/widget/allregional/list.card.share.dart';
+import 'package:nelongso_app/features/finance/widget/allregional/list.card.weak.dart';
 
 class AllRegionalScreen extends StatefulWidget {
   @override
@@ -17,9 +23,9 @@ class AllRegionalScreen extends StatefulWidget {
 
 class _AllRegionalScreenState extends State<AllRegionalScreen> {
   final AllregionalBloc _bloc = AllregionalBloc();
-  int yearSelected = 0;
-  int monthSelected = 0;
-  int sheetSelected = 0;
+  int yearSelected = 1;
+  int monthSelected = 10;
+  int sheetSelected = 1;
   List<String> yearLists = [
     null,
     '2020',
@@ -323,17 +329,41 @@ class _AllRegionalScreenState extends State<AllRegionalScreen> {
               } else if (state is AllregionalError) {
                 return FailedHostView(state: state.message);
               } else if (state is AllregionalDataLoaded) {
-                return Text('Data');
+                return ListCardData(
+                  model: state.allregionalDataModel,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
               } else if (state is AllregionalShareLoaded) {
-                return Text('Share');
+                return ListCardShare(
+                  model: state.allregionalShareModel,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
               } else if (state is AllregionalWeakLoaded) {
-                return Text('Weak');
+                return ListCardWeak(
+                  model: state.allregionalWeakModel,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
               } else if (state is AllregionalBiayaLoaded) {
-                return Text('Biaya');
+                return ListCardBiaya(
+                  model: state.allregionalBiayaModel,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
               } else if (state is AllregionalFinalLoaded) {
-                return Text('Final');
+                return ListCardFinal(
+                  model: state.allregionalFinalModel,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
               } else if (state is AllregionalPphLoaded) {
-                return Text('Pph');
+                return ListCardPph(
+                  model: state.allregionalPphModel,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
               } else {
                 return Container();
               }

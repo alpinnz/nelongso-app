@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
+import 'package:nelongso_app/core/utils/size_config.dart';
 import 'package:nelongso_app/core/widget/basic.appbar.dart';
 import 'package:nelongso_app/core/widget/failed.host.view.dart';
 import 'package:nelongso_app/core/widget/loading.page.indicator.dart';
+import 'package:nelongso_app/core/widget/dialog.custom.dart';
+import 'package:nelongso_app/core/widget/toast.custom.dart';
 import 'package:nelongso_app/features/finance/bloc/noncash_bloc.dart';
 import 'package:nelongso_app/features/finance/widget/noncash/list.card.gojekandgrab.dart';
 import 'package:nelongso_app/features/finance/widget/noncash/list.card.goresto.dart';
 import 'package:nelongso_app/features/finance/widget/noncash/list.card.grabresto.dart';
 import 'package:nelongso_app/features/finance/widget/noncash/list.card.saldogoresto.dart';
 import 'package:nelongso_app/features/finance/widget/noncash/list.card.saldograbresto.dart';
-import 'package:smart_select/smart_select.dart';
 
 class NoncashScreen extends StatefulWidget {
   @override
@@ -19,24 +22,40 @@ class NoncashScreen extends StatefulWidget {
 
 class _NoncashScreenState extends State<NoncashScreen> {
   final NoncashBloc _bloc = NoncashBloc();
-  String yearValue = '2020';
-  String sheetValue = 'GORESTO';
-  String monthValue = '10';
-
-  @override
-  void initState() {
-    _bloc.add(
-      FetchAllGoresto(year: yearValue, sheet: sheetValue, month: monthValue),
-    );
-    super.initState();
-  }
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  int yearSelected = 0;
+  int monthSelected = 0;
+  int sheetSelected = 0;
+  List<String> yearLists = [
+    null,
+    '2020',
+  ];
+  List<String> monthLists = [
+    null,
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+  ];
+  List<String> sheetLists = [
+    null,
+    "GORESTO",
+    "GRABRESTO",
+    "GOJEK & GRAB",
+    "SALDO GORESTO",
+    "SALDO GRABRESTO",
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: ColorUtils.bgColor,
       appBar: PreferredSize(
         preferredSize: const Size(double.infinity, kToolbarHeight),
@@ -52,21 +71,7 @@ class _NoncashScreenState extends State<NoncashScreen> {
             titlecolor: ColorUtils.lightColor,
             onClickEvent: () => Navigator.of(context).pop(),
             actions: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(right: 20.0),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Icon(
-                      Icons.search,
-                      size: 26.0,
-                    ),
-                  )),
-              Padding(
-                  padding: EdgeInsets.only(right: 20.0),
-                  child: GestureDetector(
-                    onTap: () => _moreWidget(context),
-                    child: Icon(Icons.more_vert),
-                  )),
+              _popupMenu(),
             ],
           ),
         ),
@@ -75,179 +80,274 @@ class _NoncashScreenState extends State<NoncashScreen> {
     );
   }
 
-  void _showSnackBar(var text) {
-    scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(text)));
-  }
+  Widget _popupMenu() {
+    List<RadioModel> years = yearLists.map((e) {
+      var i = yearLists.indexOf(e);
+      return RadioModel(
+        id: i,
+        title: '$e',
+        subtitle: 'year',
+        value: '$e',
+      );
+    }).toList();
+    List<RadioModel> months = monthLists.map((e) {
+      var i = monthLists.indexOf(e);
+      var title = '';
+      switch (e) {
+        case '1':
+          title = 'Januari';
+          break;
+        case '2':
+          title = 'Febuari';
+          break;
+        case '3':
+          title = 'Maret';
+          break;
+        case '4':
+          title = 'April';
+          break;
+        case '5':
+          title = 'Mei';
+          break;
+        case '6':
+          title = 'Juni';
+          break;
+        case '7':
+          title = 'Juli';
+          break;
+        case '8':
+          title = 'Agustus';
+          break;
+        case '9':
+          title = 'September';
+          break;
+        case '10':
+          title = 'Oktober';
+          break;
+        case '11':
+          title = 'November';
+          break;
+        case '12':
+          title = 'Desember';
+          break;
+        default:
+      }
 
-  void _moreWidget(BuildContext context) async {
-    List<S2Choice<String>> yearOptions = [
-      S2Choice<String>(value: '2020', title: '2020'),
-      // S2Choice<String>(value: '2021', title: '2021'),
-    ];
+      return RadioModel(
+        id: i,
+        title: '$title',
+        subtitle: 'month',
+        value: '$e',
+      );
+    }).toList();
+    List<RadioModel> sheets = sheetLists.map((e) {
+      var i = sheetLists.indexOf(e);
+      return RadioModel(
+        id: i,
+        title: '$e',
+        subtitle: 'sheet',
+        value: '$e',
+      );
+    }).toList();
 
-    List<S2Choice<String>> sheetOptions = [
-      S2Choice<String>(value: 'GORESTO', title: 'GORESTO'),
-      S2Choice<String>(value: 'GRABRESTO', title: 'GRABRESTO'),
-      S2Choice<String>(value: 'GOJEK & GRAB', title: 'GOJEK & GRAB'),
-      S2Choice<String>(value: 'SALDO GORESTO', title: 'SALDO GORESTO'),
-      S2Choice<String>(value: 'SALDO GRABRESTO', title: 'SALDO GRABRESTO')
-    ];
+    return PopupMenuButton(
+      onSelected: (value) {
+        switch (value) {
+          case 1:
+            return DialogCustom(context).selectRadioDialog(
+              data: years,
+              title: 'Years',
+              selected: yearSelected,
+              onChange: (val) => setState(() => yearSelected = val),
+            );
 
-    List<S2Choice<String>> monthOptions = [
-      S2Choice<String>(value: '1', title: 'Januari'),
-      S2Choice<String>(value: '2', title: 'Febuari'),
-      S2Choice<String>(value: '3', title: 'Maret'),
-      S2Choice<String>(value: '4', title: 'April'),
-      S2Choice<String>(value: '5', title: 'Mei'),
-      S2Choice<String>(value: '6', title: 'Juni'),
-      S2Choice<String>(value: '7', title: 'Juli'),
-      S2Choice<String>(value: '8', title: 'Agustus'),
-      S2Choice<String>(value: '9', title: 'September'),
-      S2Choice<String>(value: '10', title: 'Oktober'),
-      S2Choice<String>(value: '11', title: 'November'),
-      S2Choice<String>(value: '12', title: 'Desember'),
-    ];
+          case 2:
+            return DialogCustom(context).selectRadioDialog(
+              data: months,
+              title: 'Month',
+              selected: monthSelected,
+              onChange: (val) => setState(() => monthSelected = val),
+            );
 
-    bool options = await showDialog(
-      context: this.context,
-      child: Scaffold(
-        backgroundColor: ColorUtils.bgColor,
-        appBar: PreferredSize(
-          preferredSize: const Size(double.infinity, kToolbarHeight),
-          child: SafeArea(
-            left: false,
-            right: false,
-            bottom: false,
-            child: BasicAppbar(
-              appbarType: AppbarType.BACK_BUTTON,
-              colorAppbarType: ColorUtils.whiteColor,
-              bgcolor: ColorUtils.primaryColor,
-              title: "More",
-              titlecolor: ColorUtils.lightColor,
-              onClickEvent: () => Navigator.pop(context, true),
-            ),
-          ),
-        ),
-        body: Container(
-          child: Column(
-            children: [
-              SmartSelect<String>.single(
-                title: 'Year',
-                value: yearValue,
-                choiceItems: yearOptions,
-                onChange: (state) => setState(() => yearValue = state.value),
+          case 3:
+            return DialogCustom(context).selectRadioDialog(
+              data: sheets,
+              title: 'Sheets',
+              selected: sheetSelected,
+              onChange: (val) => setState(() => sheetSelected = val),
+            );
+
+            break;
+          default:
+            Fluttertoast.showToast(
+              msg: "You have selected " + value.toString(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+            break;
+        }
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 1,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                child: Icon(Icons.calendar_today),
               ),
-              SmartSelect<String>.single(
-                title: 'SheetName',
-                value: sheetValue,
-                choiceItems: sheetOptions,
-                onChange: (state) => setState(() => sheetValue = state.value),
-              ),
-              SmartSelect<String>.single(
-                title: 'Month',
-                value: monthValue,
-                choiceItems: monthOptions,
-                onChange: (state) => setState(() => sheetValue = state.value),
-              )
+              Text('Year')
             ],
           ),
         ),
-      ),
+        PopupMenuItem(
+          value: 2,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                child: Icon(Icons.calendar_today),
+              ),
+              Text('Month')
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 3,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                child: Icon(Icons.list_alt),
+              ),
+              Text('Sheet')
+            ],
+          ),
+        ),
+      ],
     );
-    print('options $options');
-    setState(() {
-      if (yearValue == '2020') {
-        if (sheetValue == 'GORESTO') {
-          _bloc.add(
-            FetchAllGoresto(
-                year: yearValue, sheet: sheetValue, month: monthValue),
-          );
-        } else if (sheetValue == 'GRABRESTO') {
-          _bloc.add(
-            FetchAllGrabresto(
-                year: yearValue, sheet: sheetValue, month: monthValue),
-          );
-        } else if (sheetValue == 'GOJEK & GRAB') {
-          _bloc.add(
-            FetchAllGojekandgrab(
-                year: yearValue, sheet: sheetValue, month: monthValue),
-          );
-        } else if (sheetValue == 'SALDO GRABRESTO') {
-          _bloc.add(
-            FetchAllSaldograbresto(
-                year: yearValue, sheet: sheetValue, month: monthValue),
-          );
-        } else if (sheetValue == 'SALDO GORESTO') {
-          _bloc.add(
-            FetchAllSaldogoresto(
-                year: yearValue, sheet: sheetValue, month: monthValue),
-          );
-        }
-      } else {
-        _showSnackBar('Year not found or data failure');
-      }
-    });
   }
 
   Widget _buildBloc() {
-    return BlocProvider(
-      create: (_) => _bloc,
-      child: BlocListener<NoncashBloc, NoncashState>(
-        listener: (context, state) {
-          if (state is NoncashError) {
-            _showSnackBar(state.message);
-          } else if (state is NoncashGorestoLoaded) {
-            _showSnackBar(
-              'Load data Noncash: Year $yearValue, Sheet $sheetValue',
-            );
-          }
-        },
-        child: BlocBuilder<NoncashBloc, NoncashState>(
-          builder: (context, state) {
-            if (state is NoncashInitial) {
-              return Center(child: LoadingPageIndicator());
-            } else if (state is NoncashLoading) {
-              return Center(child: LoadingPageIndicator());
-            } else if (state is NoncashGorestoLoaded) {
-              return ListCardGoresto(
-                  model: state.noncashGoresto,
-                  month: int.parse(monthValue),
-                  year: int.parse(yearValue));
-            } else if (state is NoncashGrabrestoLoaded) {
-              return ListCardGrabresto(
-                model: state.noncashGrabresto,
-                month: int.parse(monthValue),
-                year: int.parse(yearValue),
-              );
-            } else if (state is NoncashGojekandgrabLoaded) {
-              return ListCardGojekandgrab(
-                model: state.noncashGojekandgrabModel,
-                month: int.parse(monthValue),
-                year: int.parse(yearValue),
-              );
-            } else if (state is NoncashSaldograbrestoLoaded) {
-              return ListCardSaldograbresto(
-                model: state.noncashSaldograbresto,
-                month: int.parse(monthValue),
-                year: int.parse(yearValue),
-              );
-            }
-            if (state is NoncashSaldogorestoLoaded) {
-              return ListCardSaldogoresto(
-                model: state.noncashSaldogoresto,
-                month: int.parse(monthValue),
-                year: int.parse(yearValue),
-              );
-            } else if (state is NoncashError) {
-              return FailedHostView(state: state);
-            } else {
-              return Container();
+    List<int> check = [yearSelected, monthSelected, sheetSelected];
+    print(!check.contains(0));
+    if (check.contains(0)) {
+      return Container(
+        child: Center(
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.heightMultiplier * 2,
+                vertical: SizeConfig.widthMultiplier * 2,
+              ),
+              child: Text(
+                'Selected options more...',
+                style: TextStyle(
+                  fontSize: SizeConfig.textMultiplier * 2,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      if (sheetSelected == 1) {
+        _bloc.add(FetchAllGoresto(
+          year: yearLists[yearSelected],
+          month: monthLists[monthSelected],
+          sheet: sheetLists[sheetSelected],
+        ));
+      } else if (sheetSelected == 2) {
+        _bloc.add(FetchAllGrabresto(
+          year: yearLists[yearSelected],
+          month: monthLists[monthSelected],
+          sheet: sheetLists[sheetSelected],
+        ));
+      } else if (sheetSelected == 3) {
+        _bloc.add(FetchAllGojekandgrab(
+          year: yearLists[yearSelected],
+          month: monthLists[monthSelected],
+          sheet: sheetLists[sheetSelected],
+        ));
+      } else if (sheetSelected == 4) {
+        _bloc.add(FetchAllSaldograbresto(
+          year: yearLists[yearSelected],
+          month: monthLists[monthSelected],
+          sheet: sheetLists[sheetSelected],
+        ));
+      } else if (sheetSelected == 5) {
+        _bloc.add(FetchAllSaldogoresto(
+          year: yearLists[yearSelected],
+          month: monthLists[monthSelected],
+          sheet: sheetLists[sheetSelected],
+        ));
+      }
+      return BlocProvider(
+        create: (_) => _bloc,
+        child: BlocListener<NoncashBloc, NoncashState>(
+          listener: (context, state) {
+            final error =
+                'Year ${yearLists[yearSelected]}, Month ${monthLists[monthSelected]}, Sheet ${sheetLists[sheetSelected]}';
+            if (state is NoncashError) {
+              ToastCustom(context).showDefault(msg: state.message);
+            } else if (state is! NoncashInitial || state is! NoncashLoading) {
+              ToastCustom(context).showDefault(msg: error.toString());
             }
           },
+          child: BlocBuilder<NoncashBloc, NoncashState>(
+            builder: (context, state) {
+              if (state is NoncashInitial) {
+                return Center(child: LoadingPageIndicator());
+              } else if (state is NoncashLoading) {
+                return Center(child: LoadingPageIndicator());
+              } else if (state is NoncashError) {
+                return FailedHostView(state: state.message);
+              } else if (state is NoncashGorestoLoaded) {
+                return ListCardGoresto(
+                  model: state.noncashGoresto,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is NoncashGrabrestoLoaded) {
+                return ListCardGrabresto(
+                  model: state.noncashGrabresto,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is NoncashGojekandgrabLoaded) {
+                return ListCardGojekandgrab(
+                  model: state.noncashGojekandgrabModel,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is NoncashSaldograbrestoLoaded) {
+                return ListCardSaldograbresto(
+                  model: state.noncashSaldograbresto,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else if (state is NoncashSaldogorestoLoaded) {
+                return ListCardSaldogoresto(
+                  model: state.noncashSaldogoresto,
+                  month: int.parse(monthLists[monthSelected]),
+                  year: int.parse(yearLists[yearSelected]),
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
-// ListCardGojekandgrab

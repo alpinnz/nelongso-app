@@ -1,48 +1,13 @@
 class AllregionalPphModel {
-  String name;
-  String message;
-  int code;
-  int status;
-  List<Data> data;
-
-  AllregionalPphModel(
-      {this.name, this.message, this.code, this.status, this.data});
-
-  AllregionalPphModel.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    message = json['message'];
-    code = json['code'];
-    status = json['status'];
-    if (json['data'] != null) {
-      data = new List<Data>();
-      json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['message'] = this.message;
-    data['code'] = this.code;
-    data['status'] = this.status;
-    if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Data {
   String no;
   String outlet;
   BulanSebelum bulanSebelum;
   BulanSebelum bulanSekarang;
 
-  Data({this.no, this.outlet, this.bulanSebelum, this.bulanSekarang});
+  AllregionalPphModel(
+      {this.no, this.outlet, this.bulanSebelum, this.bulanSekarang});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  AllregionalPphModel.fromJson(Map<String, dynamic> json) {
     no = json['no'];
     outlet = json['outlet'];
     bulanSebelum = json['bulan_sebelum'] != null

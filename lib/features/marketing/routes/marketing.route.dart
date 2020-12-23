@@ -3,12 +3,12 @@ import 'package:nelongso_app/config/route.config.dart';
 import 'package:nelongso_app/core/app.dart';
 import 'package:nelongso_app/features/marketing/screen/analytics.screen.dart';
 import 'package:nelongso_app/features/marketing/screen/customer.screen.dart';
-import 'package:nelongso_app/features/marketing/screen/ketercapaian.screen.dart';
-import 'package:nelongso_app/features/marketing/screen/losesale.screen%20copy%202.dart';
+import 'package:nelongso_app/features/marketing/screen/sales.ketercapaian.screen.dart';
+import 'package:nelongso_app/features/marketing/screen/sales.lose.screen.dart';
 import 'package:nelongso_app/features/marketing/screen/marketing.screen.dart';
-import 'package:nelongso_app/features/marketing/screen/potensial.screen.dart';
+import 'package:nelongso_app/features/marketing/screen/sales.potensial.screen.dart';
 import 'package:nelongso_app/features/marketing/screen/sales.screen.dart';
-import 'package:nelongso_app/features/marketing/screen/trendomzet.screen.dart';
+import 'package:nelongso_app/features/marketing/screen/sales.trend.screen.dart';
 import 'package:sailor/sailor.dart';
 
 class RouteConfigMarketing {
@@ -28,25 +28,25 @@ class RouteConfigMarketing {
     SailorRoute(
       name: RouteConfig.MARKETING_SALES_KETERCAPAIAN,
       builder: (context, args, params) {
-        return KetercapaianScreen();
+        return SalesKetercapaianScreen();
       },
     ),
     SailorRoute(
       name: RouteConfig.MARKETING_SALES_LOSESALE,
       builder: (context, args, params) {
-        return LoseSaleScreen();
+        return SalesLoseScreen();
       },
     ),
     SailorRoute(
       name: RouteConfig.MARKETING_SALES_POTENSIAL,
       builder: (context, args, params) {
-        return PotensialScreen();
+        return SalesPotensialScreen();
       },
     ),
     SailorRoute(
       name: RouteConfig.MARKETING_SALES_TRENDOMZET,
       builder: (context, args, params) {
-        return TrendOmzetScreen();
+        return SalesTrendScreen();
       },
     ),
     SailorRoute(

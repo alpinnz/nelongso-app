@@ -71,7 +71,6 @@ class DialogCustom {
     }
   }
 
-  @override
   Widget build(BuildContext context) {
     return Container();
   }

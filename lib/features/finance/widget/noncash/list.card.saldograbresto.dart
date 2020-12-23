@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
-import 'package:nelongso_app/core/widget/basic.appbar.dart';
 import 'package:nelongso_app/features/finance/model/chart.item.model.dart';
-import 'package:nelongso_app/features/finance/model/noncash.grabresto.model.dart';
 import 'package:nelongso_app/features/finance/model/noncash.saldograbresto.model.dart';
-import 'package:nelongso_app/features/finance/widget/noncash/time.series.bar.dart';
 import 'package:nelongso_app/features/finance/widget/noncash/time.series.charts.dart';
 
 class ListCardSaldograbresto extends StatelessWidget {

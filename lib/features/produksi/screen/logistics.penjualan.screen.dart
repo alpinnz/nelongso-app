@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/widget/basic.appbar.dart';
 
-class PotensialScreen extends StatelessWidget {
+class LogisticsPenjualanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,20 +17,13 @@ class PotensialScreen extends StatelessWidget {
             appbarType: AppbarType.BACK_BUTTON,
             colorAppbarType: ColorUtils.whiteColor,
             bgcolor: ColorUtils.primaryColor,
-            title: "Potensial",
+            title: "Bahan Baku Penjualan",
             titlecolor: ColorUtils.lightColor,
             onClickEvent: () => Navigator.of(context).pop(),
           ),
         ),
       ),
-      body: PotensialContent(),
+      body: Text('Bahan Baku Penjualan'),
     );
-  }
-}
-
-class PotensialContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

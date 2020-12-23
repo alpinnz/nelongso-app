@@ -4,7 +4,10 @@ import 'package:nelongso_app/core/utils/size_config.dart';
 import 'package:nelongso_app/core/widget/basic.appbar.dart';
 import 'package:nelongso_app/features/bisdev/routes/bisdev.route.dart';
 import 'package:nelongso_app/features/finance/routes/finance.route.dart';
+import 'package:nelongso_app/features/hrd/routes/hrd.route.dart';
 import 'package:nelongso_app/features/marketing/routes/marketing.route.dart';
+import 'package:nelongso_app/features/operasional/routes/operasional.route.dart';
+import 'package:nelongso_app/features/produksi/routes/produksi.route.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -38,15 +41,18 @@ class HomeContent extends StatelessWidget {
     void onBisdev() => RouteConfigBisdev.navigateBisdev(context);
     void onFinance() => RouteConfigFinance.navigateFinance(context);
     void onMarketing() => RouteConfigMarketing.navigateMarketing(context);
+    void onOperasional() => RouteConfigOperasional.navigateOperasional(context);
+    void onProduksi() => RouteConfigProduksi.navigateProduksi(context);
+    void onHrd() => RouteConfigHrd.navigateHrd(context);
     return Container(
       child: Column(
         children: [
           _itemData('Bisdev', onBisdev),
           _itemData('Keuangan', onFinance),
           _itemData('Marketing', onMarketing),
-          // _itemData('HRD', null),
-          // _itemData('Operasional', null),
-          // _itemData('Produksi', null),
+          _itemData('HRD', onHrd),
+          _itemData('Operasional', onOperasional),
+          _itemData('Produksi', onProduksi),
         ],
       ),
     );
