@@ -15,7 +15,7 @@ class DioClientSingleton {
   Future<Null> init() async {
     dio = Dio(
       BaseOptions(
-        baseUrl: Constanta.BASE_API,
+        baseUrl: Constanta.BASE_URL,
         // connectTimeout: 10000,
         // receiveTimeout: 10000,
         responseType: ResponseType.json,

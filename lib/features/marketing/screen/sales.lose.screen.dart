@@ -32,10 +32,7 @@ class _SalesLoseScreenState extends State<SalesLoseScreen> {
     sheetSelected = 0;
   }
 
-  List<String> yearLists = [
-    null,
-    '2020',
-  ];
+  List<String> yearLists = [null, '2020', '2021'];
   List<String> monthLists = [
     null,
     '1',
@@ -283,12 +280,8 @@ class _SalesLoseScreenState extends State<SalesLoseScreen> {
         create: (_) => _bloc,
         child: BlocListener<LoseBloc, LoseState>(
           listener: (context, state) {
-            final error =
-                'Year ${yearLists[yearSelected]}, Month ${monthLists[monthSelected]}, Sheet ${sheetLists[sheetSelected]}';
             if (state is LoseError) {
               ToastCustom(context).showDefault(msg: state.message);
-            } else {
-              ToastCustom(context).showDefault(msg: error.toString());
             }
           },
           child: BlocBuilder<LoseBloc, LoseState>(
@@ -298,7 +291,7 @@ class _SalesLoseScreenState extends State<SalesLoseScreen> {
               } else if (state is LoseLoading) {
                 return Center(child: LoadingPageIndicator());
               } else if (state is LoseError) {
-                return FailedHostView(state: state.message);
+                return FailedHostView(state: state);
               } else if (state is LoseRekapLoaded) {
                 return ListCardRekap(
                   model: state.data,

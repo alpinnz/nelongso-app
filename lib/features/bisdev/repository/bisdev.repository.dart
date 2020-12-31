@@ -5,13 +5,13 @@ class BisdevRepository {
   final _investorProvider = InvestorProvider();
   final _outletProvider = OutletProvider();
 
-  Future<dynamic> fetchInvestoryList() async {
-    dynamic data = await _investorProvider.fetchList();
+  Future<dynamic> fetchInvestoryList({String year}) async {
+    dynamic data = await _investorProvider.fetchList(year: year);
     return data;
   }
 
-  Future<dynamic> fetchOutletList() async {
-    dynamic data = await _outletProvider.fetchList();
+  Future<dynamic> fetchOutletList({String year}) async {
+    dynamic data = await _outletProvider.fetchList(year: year);
     return data;
   }
 }

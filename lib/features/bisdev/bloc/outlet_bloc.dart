@@ -20,7 +20,7 @@ class OutletBloc extends Bloc<OutletEvent, OutletState> {
     if (event is FetchAll) {
       try {
         yield OutletLoading();
-        final data = await _apiRepository.fetchOutletList();
+        final data = await _apiRepository.fetchOutletList(year: event.year);
         shout('OutletBloc', data);
         if (data.isNotEmpty || !data is String) {
           yield OutletLoaded(data);

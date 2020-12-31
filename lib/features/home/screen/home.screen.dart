@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
 import 'package:nelongso_app/core/widget/basic.appbar.dart';
+import 'package:nelongso_app/core/widget/loading.page.indicator.dart';
+import 'package:nelongso_app/core/widget/toast.custom.dart';
 import 'package:nelongso_app/features/bisdev/routes/bisdev.route.dart';
 import 'package:nelongso_app/features/finance/routes/finance.route.dart';
+import 'package:nelongso_app/features/home/bloc/home_bloc.dart';
 import 'package:nelongso_app/features/hrd/routes/hrd.route.dart';
 import 'package:nelongso_app/features/marketing/routes/marketing.route.dart';
 import 'package:nelongso_app/features/operasional/routes/operasional.route.dart';
@@ -35,7 +39,21 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeContent extends StatelessWidget {
+class HomeContent extends StatefulWidget {
+  // ignore: close_sinks
+  @override
+  _HomeContentState createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent> {
+  final HomeBloc _bloc = HomeBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc.add(LoadEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     void onBisdev() => RouteConfigBisdev.navigateBisdev(context);
@@ -44,33 +62,214 @@ class HomeContent extends StatelessWidget {
     void onOperasional() => RouteConfigOperasional.navigateOperasional(context);
     void onProduksi() => RouteConfigProduksi.navigateProduksi(context);
     void onHrd() => RouteConfigHrd.navigateHrd(context);
-    return Container(
-      child: Column(
-        children: [
-          _itemData('Bisdev', onBisdev),
-          _itemData('Keuangan', onFinance),
-          _itemData('Marketing', onMarketing),
-          _itemData('HRD', onHrd),
-          _itemData('Operasional', onOperasional),
-          _itemData('Produksi', onProduksi),
-        ],
+
+    Widget homeAdmin() {
+      return Container(
+        child: Column(
+          children: [
+            _itemData('Bisdev', onBisdev, true),
+            _itemData('Keuangan', onFinance, true),
+            _itemData('Marketing', onMarketing, true),
+            _itemData('HRD', onHrd, true),
+            _itemData('Operasional', onOperasional, true),
+            _itemData('Produksi', onProduksi, true),
+          ],
+        ),
+      );
+    }
+
+    Widget homeOwner() {
+      return Container(
+        child: Column(
+          children: [
+            _itemData('Bisdev', onBisdev, true),
+            _itemData('Keuangan', onFinance, true),
+            _itemData('Marketing', onMarketing, true),
+            _itemData('HRD', onHrd, true),
+            _itemData('Operasional', onOperasional, true),
+            _itemData('Produksi', onProduksi, true),
+          ],
+        ),
+      );
+    }
+
+    Widget homeCOBisdev() {
+      return Container(
+        child: Column(
+          children: [
+            _itemData('Bisdev', onBisdev, true),
+            _itemData('Keuangan', onFinance, false),
+            _itemData('Marketing', onMarketing, false),
+            _itemData('HRD', onHrd, false),
+            _itemData('Operasional', onOperasional, false),
+            _itemData('Produksi', onProduksi, false),
+          ],
+        ),
+      );
+    }
+
+    Widget homeCOFinance() {
+      return Container(
+        child: Column(
+          children: [
+            _itemData('Bisdev', onBisdev, false),
+            _itemData('Keuangan', onFinance, true),
+            _itemData('Marketing', onMarketing, false),
+            _itemData('HRD', onHrd, false),
+            _itemData('Operasional', onOperasional, false),
+            _itemData('Produksi', onProduksi, false),
+          ],
+        ),
+      );
+    }
+
+    Widget homeCOMarketing() {
+      return Container(
+        child: Column(
+          children: [
+            _itemData('Bisdev', onBisdev, false),
+            _itemData('Keuangan', onFinance, false),
+            _itemData('Marketing', onMarketing, true),
+            _itemData('HRD', onHrd, false),
+            _itemData('Operasional', onOperasional, false),
+            _itemData('Produksi', onProduksi, false),
+          ],
+        ),
+      );
+    }
+
+    Widget homeCOHrd() {
+      return Container(
+        child: Column(
+          children: [
+            _itemData('Bisdev', onBisdev, false),
+            _itemData('Keuangan', onFinance, false),
+            _itemData('Marketing', onMarketing, false),
+            _itemData('HRD', onHrd, true),
+            _itemData('Operasional', onOperasional, false),
+            _itemData('Produksi', onProduksi, false),
+          ],
+        ),
+      );
+    }
+
+    Widget homeCOOperasional() {
+      return Container(
+        child: Column(
+          children: [
+            _itemData('Bisdev', onBisdev, false),
+            _itemData('Keuangan', onFinance, false),
+            _itemData('Marketing', onMarketing, false),
+            _itemData('HRD', onHrd, false),
+            _itemData('Operasional', onOperasional, true),
+            _itemData('Produksi', onProduksi, false),
+          ],
+        ),
+      );
+    }
+
+    Widget homeCOProduksi() {
+      return Container(
+        child: Column(
+          children: [
+            _itemData('Bisdev', onBisdev, false),
+            _itemData('Keuangan', onFinance, false),
+            _itemData('Marketing', onMarketing, false),
+            _itemData('HRD', onHrd, false),
+            _itemData('Operasional', onOperasional, false),
+            _itemData('Produksi', onProduksi, true),
+          ],
+        ),
+      );
+    }
+
+    Widget homeUser() {
+      return Container(
+        child: Column(
+          children: [
+            _itemData('Bisdev', onBisdev, false),
+            _itemData('Keuangan', onFinance, false),
+            _itemData('Marketing', onMarketing, false),
+            _itemData('HRD', onHrd, false),
+            _itemData('Operasional', onOperasional, false),
+            _itemData('Produksi', onProduksi, true),
+          ],
+        ),
+      );
+    }
+
+    return BlocProvider(
+      create: (_) => _bloc,
+      child: BlocListener<HomeBloc, HomeState>(
+        listener: (context, state) {
+          if (state is HomeError) {
+            ToastCustom(context).showDefault(msg: state.message);
+          }
+        },
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            if (state is HomeLoading) {
+              return Center(child: LoadingPageIndicator());
+            }
+            if (state is HomeInitial) {
+              return Center(child: LoadingPageIndicator());
+            }
+            if (state is HomeAdmin) {
+              return homeAdmin();
+            }
+            if (state is HomeOwner) {
+              return homeOwner();
+            }
+            if (state is HomeCOBisdev) {
+              return homeCOBisdev();
+            }
+            if (state is HomeCOFinance) {
+              return homeCOFinance();
+            }
+            if (state is HomeCOMarketing) {
+              return homeCOMarketing();
+            }
+            if (state is HomeCOHrd) {
+              return homeCOHrd();
+            }
+            if (state is HomeCOOperasional) {
+              return homeCOOperasional();
+            }
+            if (state is HomeCOProduksi) {
+              return homeCOProduksi();
+            }
+            if (state is HomeUser) {
+              return homeUser();
+            }
+            if (state is HomeError) {
+              return Center(
+                child: Text(state.message.toString()),
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
       ),
     );
   }
 
-  Widget _itemData(String _title, Function _onTap) {
+  Widget _itemData(String _title, Function _onTap, bool enabled) {
     return ListTile(
       title: Text('$_title'),
-      trailing: Icon(
-        Icons.chevron_right,
-        size: SizeConfig.imageSizeMultiplier * 9,
-      ),
+      trailing: enabled
+          ? Icon(
+              Icons.chevron_right,
+              size: SizeConfig.imageSizeMultiplier * 9,
+            )
+          : null,
       leading: Icon(
         Icons.book,
         size: SizeConfig.imageSizeMultiplier * 9,
       ),
       subtitle: Text('divisi'),
-      onTap: () => _onTap(),
+      onTap: enabled ? () => _onTap() : () => null,
+      enabled: enabled,
     );
   }
 }

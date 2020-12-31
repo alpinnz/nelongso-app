@@ -1,11 +1,15 @@
 part of 'investor_bloc.dart';
 
 abstract class InvestorEvent extends Equatable {
-  const InvestorEvent();
+  final String year;
+  const InvestorEvent({this.year});
+  @override
+  List<Object> get props => [year];
 }
 
 class FetchAll extends InvestorEvent {
-  const FetchAll();
+  final String year;
+  const FetchAll({this.year});
   @override
-  List<Object> get props => null;
+  List<Object> get props => [year];
 }

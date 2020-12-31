@@ -10,29 +10,35 @@ String _url = '';
 class LoseProvider {
   var _dio = DioClientSingleton().dio;
   Future<dynamic> fetchList({String sheet, String year, String month}) async {
-    _url = '/division/marketing/sales/lose-sale/$sheet/$year/$month';
+    _url = '/api/v1/division/marketing/sales/lose-sale/$sheet/$year/$month';
+
     try {
       Response response = await _dio.get(_url);
       shout('fetchAllLoseSaleList', response);
-      if (response.statusCode == 200) {
-        if (sheet == 'REKAP OUTLET') {
-          return (response.data['data'] as List)
-              .map((x) => LoseRekapModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'OUTLET') {
-          return (response.data['data'] as List)
-              .map((x) => LoseOutletModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'MENU') {
-          return (response.data['data'] as List)
-              .map((x) => LoseMenuModel.fromJson(x))
-              .toList();
+
+      if (response != null && response.data['name'] != null) {
+        String name = '${response.data['name']}'.toLowerCase();
+        if (name == 'success') {
+          if (sheet == 'REKAP OUTLET') {
+            return (response.data['data'] as List)
+                .map((x) => LoseRekapModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'OUTLET') {
+            return (response.data['data'] as List)
+                .map((x) => LoseOutletModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'MENU') {
+            return (response.data['data'] as List)
+                .map((x) => LoseMenuModel.fromJson(x))
+                .toList();
+          }
+        } else {
+          return response.data['message'];
         }
       }
-      return 'Data not found or connection error';
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return 'Data not found or connection error';
+      return null;
+    } catch (_) {
+      return null;
     }
   }
 

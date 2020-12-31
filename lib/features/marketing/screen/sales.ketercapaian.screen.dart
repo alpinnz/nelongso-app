@@ -37,10 +37,7 @@ class _SalesKetercapaianScreenState extends State<SalesKetercapaianScreen> {
     sheetSelected = 0;
   }
 
-  List<String> yearLists = [
-    null,
-    '2020',
-  ];
+  List<String> yearLists = [null, '2020', '2021'];
   List<String> monthLists = [
     null,
     '1',
@@ -327,12 +324,8 @@ class _SalesKetercapaianScreenState extends State<SalesKetercapaianScreen> {
         create: (_) => _bloc,
         child: BlocListener<KetercapaianBloc, KetercapaianState>(
           listener: (context, state) {
-            final error =
-                'Year ${yearLists[yearSelected]}, Month ${monthLists[monthSelected]}, Sheet ${sheetLists[sheetSelected]}';
             if (state is KetercapaianError) {
               ToastCustom(context).showDefault(msg: state.message);
-            } else {
-              ToastCustom(context).showDefault(msg: error.toString());
             }
           },
           child: BlocBuilder<KetercapaianBloc, KetercapaianState>(
@@ -342,7 +335,7 @@ class _SalesKetercapaianScreenState extends State<SalesKetercapaianScreen> {
               } else if (state is KetercapaianLoading) {
                 return Center(child: LoadingPageIndicator());
               } else if (state is KetercapaianError) {
-                return FailedHostView(state: state.message);
+                return FailedHostView(state: state);
               } else if (state is KetercapaianOmzetLoaded) {
                 return ListCardOmzet(
                   model: state.data,

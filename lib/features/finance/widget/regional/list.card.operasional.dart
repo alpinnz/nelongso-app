@@ -15,7 +15,11 @@ class ListCardOperasional extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _newTitle(String _title) {
-      return "${_title.substring(0, 1).toUpperCase()}${_title.substring(1).toLowerCase()}";
+      if (_title.length > 0) {
+        return "${_title.substring(0, 1).toUpperCase()}${_title.substring(1).toLowerCase()}";
+      } else {
+        return '';
+      }
     }
 
     void _barWidget(

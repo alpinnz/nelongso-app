@@ -14,48 +14,53 @@ String _url = '';
 class KetercapaianProvider {
   var _dio = DioClientSingleton().dio;
   Future<dynamic> fetchList({String sheet, String year, String month}) async {
-    _url = '/division/marketing/sales/ketercapaian/$sheet/$year/$month';
+    _url = '/api/v1/division/marketing/sales/ketercapaian/$sheet/$year/$month';
+
     try {
       Response response = await _dio.get(_url);
       shout('fetchAllKetercapaianList', response);
-      if (response.statusCode == 200) {
-        if (sheet == 'KETERCAPAIAN OMZET') {
-          return (response.data['data'] as List)
-              .map((x) => KetercapaianOmzetModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'KETERCAPAIAN KUNJUNGAN') {
-          return (response.data['data'] as List)
-              .map((x) => KetercapaianKunjunganModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'KETERCAPAIAN BASKET SIZE') {
-          return (response.data['data'] as List)
-              .map((x) => KetercapaianBasketModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'KETERCAPAIAN JATIM 1' ||
-            sheet == 'KETERCAPAIAN JATIM 2' ||
-            sheet == 'KETERCAPAIAN JATIM 3' ||
-            sheet == 'KETERCAPAIAN JABAR') {
-          return (response.data['data'] as List)
-              .map((x) => KetercapaianRegionalModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'KETERCAPAIAN ALL REGIONAL') {
-          return (response.data['data'] as List)
-              .map((x) => KetercapaianAllregionalModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'BULAN SEBELUM VS BULAN SEKARANG') {
-          return (response.data['data'] as List)
-              .map((x) => KetercapaianSelisihModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'KESEHATAN OUTLET') {
-          return (response.data['data'] as List)
-              .map((x) => KetercapaianOutletModel.fromJson(x))
-              .toList();
+      if (response != null && response.data['name'] != null) {
+        String name = '${response.data['name']}'.toLowerCase();
+        if (name == 'success') {
+          if (sheet == 'KETERCAPAIAN OMZET') {
+            return (response.data['data'] as List)
+                .map((x) => KetercapaianOmzetModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'KETERCAPAIAN KUNJUNGAN') {
+            return (response.data['data'] as List)
+                .map((x) => KetercapaianKunjunganModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'KETERCAPAIAN BASKET SIZE') {
+            return (response.data['data'] as List)
+                .map((x) => KetercapaianBasketModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'KETERCAPAIAN JATIM 1' ||
+              sheet == 'KETERCAPAIAN JATIM 2' ||
+              sheet == 'KETERCAPAIAN JATIM 3' ||
+              sheet == 'KETERCAPAIAN JABAR') {
+            return (response.data['data'] as List)
+                .map((x) => KetercapaianRegionalModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'KETERCAPAIAN ALL REGIONAL') {
+            return (response.data['data'] as List)
+                .map((x) => KetercapaianAllregionalModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'BULAN SEBELUM VS BULAN SEKARANG') {
+            return (response.data['data'] as List)
+                .map((x) => KetercapaianSelisihModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'KESEHATAN OUTLET') {
+            return (response.data['data'] as List)
+                .map((x) => KetercapaianOutletModel.fromJson(x))
+                .toList();
+          }
+        } else {
+          return response.data['message'];
         }
       }
-      return 'Data not found or connection error';
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return 'Data not found or connection error';
+      return null;
+    } catch (_) {
+      return null;
     }
   }
 

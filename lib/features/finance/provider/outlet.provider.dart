@@ -3,7 +3,7 @@ import 'package:nelongso_app/config/dio.client.singleton.dart';
 import 'package:nelongso_app/core/helper/InspectTool.dart';
 import 'package:nelongso_app/features/finance/model/outlet.model.dart';
 
-final String _url = '/division/keuangan/outlet-profiles';
+final String _url = '/api/v1/division/keuangan/outlet-profiles';
 
 class OutletProvider {
   var _dio = DioClientSingleton().dio;
@@ -11,15 +11,20 @@ class OutletProvider {
     try {
       Response response = await _dio.get(_url);
       shout('fetchOutletList', response);
-      if (response.statusCode == 200) {
-        return (response.data['data'] as List)
-            .map((x) => OutletModel.fromJson(x))
-            .toList();
+
+      if (response != null && response.data['name'] != null) {
+        String name = '${response.data['name']}'.toLowerCase();
+        if (name == 'success') {
+          return (response.data['data'] as List)
+              .map((x) => OutletModel.fromJson(x))
+              .toList();
+        } else {
+          return response.data['message'];
+        }
       }
       return null;
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return 'Data not found or connection error';
+    } catch (_) {
+      return null;
     }
   }
 

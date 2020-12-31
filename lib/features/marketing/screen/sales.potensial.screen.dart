@@ -30,10 +30,7 @@ class _SalesPotensialScreenState extends State<SalesPotensialScreen> {
     sheetSelected = 0;
   }
 
-  List<String> yearLists = [
-    null,
-    '2020',
-  ];
+  List<String> yearLists = [null, '2020', '2021'];
   List<String> monthLists = [
     null,
     '1',
@@ -272,12 +269,8 @@ class _SalesPotensialScreenState extends State<SalesPotensialScreen> {
         create: (_) => _bloc,
         child: BlocListener<PotensialBloc, PotensialState>(
           listener: (context, state) {
-            final error =
-                'Year ${yearLists[yearSelected]}, Month ${monthLists[monthSelected]}, Sheet ${sheetLists[sheetSelected]}';
             if (state is PotensialError) {
               ToastCustom(context).showDefault(msg: state.message);
-            } else {
-              ToastCustom(context).showDefault(msg: error.toString());
             }
           },
           child: BlocBuilder<PotensialBloc, PotensialState>(
@@ -287,7 +280,7 @@ class _SalesPotensialScreenState extends State<SalesPotensialScreen> {
               } else if (state is PotensialLoading) {
                 return Center(child: LoadingPageIndicator());
               } else if (state is PotensialError) {
-                return FailedHostView(state: state.message);
+                return FailedHostView(state: state);
               } else if (state is PotensialRegionalLoaded) {
                 return ListCardRegional(
                   model: state.data,

@@ -3,7 +3,6 @@ import 'package:nelongso_app/features/bisdev/routes/bisdev.route.dart';
 import 'package:nelongso_app/features/finance/routes/finance.route.dart';
 import 'package:nelongso_app/features/home/routes/home.route.dart';
 import 'package:nelongso_app/features/hrd/routes/hrd.route.dart';
-import 'package:nelongso_app/features/init/route/init.route.dart';
 import 'package:nelongso_app/features/marketing/routes/marketing.route.dart';
 import 'package:nelongso_app/features/operasional/routes/operasional.route.dart';
 import 'package:nelongso_app/features/produksi/routes/produksi.route.dart';
@@ -95,7 +94,6 @@ class RouteConfig {
   static const HRD_RECRUITMENT_INTERVIEW = '/hrd/recruitment/interview';
 
   static void configureMainRoutes(Sailor router) {
-    router.addRoutes(RouteConfigInit.routes);
     router.addRoutes(RouteConfigAuth.routes);
     router.addRoutes(RouteConfigHome.routes);
     router.addRoutes(RouteConfigBisdev.routes);

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
+import 'package:nelongso_app/core/widget/failed.host.view.dart';
+import 'package:nelongso_app/core/widget/loading.page.indicator.dart';
+import 'package:nelongso_app/core/widget/toast.custom.dart';
+import 'package:nelongso_app/features/auth/bloc/login_bloc.dart';
 import 'package:nelongso_app/features/home/routes/home.route.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -18,9 +23,12 @@ class LoginContent extends StatefulWidget {
 }
 
 class _LoginContentState extends State<LoginContent> {
-  TextEditingController _usernameController = TextEditingController();
+  final LoginBloc _bloc = LoginBloc();
 
-  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _emailController =
+      TextEditingController(text: 'admin@demo.com');
+  TextEditingController _passwordController =
+      TextEditingController(text: 'password');
 
   bool _isRememberMe = false;
 
@@ -43,17 +51,51 @@ class _LoginContentState extends State<LoginContent> {
       // If the form is valid, display a snackbar. In the real world,
       // you'd often call a server or save the information in a database.
 
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Processing Data'),
-        ),
-      );
-      RouteConfigHome.navigateToHome(context);
+      // Scaffold.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('Processing Data'),
+      //   ),
+      // );
+      // RouteConfigHome.navigateToHome(context);
+
+      _bloc.add(OnLoginEvent(
+          email: _emailController.text, password: _passwordController.text));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    return buildBloc();
+  }
+
+  Widget buildBloc() {
+    return BlocProvider(
+      create: (_) => _bloc,
+      child: BlocListener<LoginBloc, LoginState>(
+        listener: (context, state) {
+          if (state is LoginError) {
+            ToastCustom(context).showDefault(msg: state.message);
+          }
+          if (state is LoginLoaded) {
+            ToastCustom(context).showDefault(msg: 'Login Berhasil...');
+            
+            RouteConfigHome.navigateToHome(context);
+          }
+        },
+        child: BlocBuilder<LoginBloc, LoginState>(
+          builder: (context, state) {
+            if (state is LoginLoading) {
+              return Center(child: LoadingPageIndicator());
+            }else {
+              return formInput();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget formInput() {
     return Form(
       key: _formKey,
       child: Center(
@@ -71,7 +113,7 @@ class _LoginContentState extends State<LoginContent> {
                 ),
               ),
               // Text('Username'),
-              textInputCustom('Username', _usernameController, null),
+              textInputCustom('Email', _emailController, null),
               textInputCustom('Password', _passwordController, 'password'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -9,14 +9,14 @@ import 'package:nelongso_app/features/finance/model/allregional.final.model.dart
 import 'package:nelongso_app/features/finance/model/allregional.pph.model.dart';
 import 'package:nelongso_app/features/finance/model/allregional.share.model.dart';
 import 'package:nelongso_app/features/finance/model/allregional.weak.model.dart';
-import 'package:nelongso_app/features/finance/repository/finance.repository.dart';
+import 'package:nelongso_app/features/finance/provider/allregional.provider.dart';
 
 part 'allregional_event.dart';
 part 'allregional_state.dart';
 
 class AllregionalBloc extends Bloc<AllregionalEvent, AllregionalState> {
   AllregionalBloc() : super(AllregionalInitial());
-  final FinanceRepository _apiRepository = FinanceRepository();
+  final AllregionalProvider _apiProvider = AllregionalProvider();
 
   @override
   Stream<AllregionalState> mapEventToState(
@@ -25,91 +25,108 @@ class AllregionalBloc extends Bloc<AllregionalEvent, AllregionalState> {
     if (event is FetchAllData) {
       try {
         yield AllregionalLoading();
-        final data = await _apiRepository.fetchAllregionalList(
+        final data = await _apiProvider.fetchList(
             sheet: event.sheet, month: event.month, year: event.year);
         shout('Allregional Bloc', data);
         if (data is String) {
+          yield AllregionalError(data);
+        } else if (data == null) {
           yield AllregionalError(
               'Failed to fetch data. is your device online?');
         } else {
           yield AllregionalDataLoaded(data);
         }
-      } on NetworkError {
+      } catch (_) {
         yield AllregionalError("Failed to fetch data. is your device online?");
       }
     } else if (event is FetchAllShare) {
       try {
         yield AllregionalLoading();
-        final data = await _apiRepository.fetchAllregionalList(
+        final data = await _apiProvider.fetchList(
             sheet: event.sheet, month: event.month, year: event.year);
         shout('Allregional Bloc', data);
+
         if (data is String) {
+          yield AllregionalError(data);
+        } else if (data == null) {
           yield AllregionalError(
               'Failed to fetch data. is your device online?');
         } else {
           yield AllregionalShareLoaded(data);
         }
-      } on NetworkError {
+      } catch (_) {
         yield AllregionalError("Failed to fetch data. is your device online?");
       }
     } else if (event is FetchAllWeak) {
       try {
         yield AllregionalLoading();
-        final data = await _apiRepository.fetchAllregionalList(
+        final data = await _apiProvider.fetchList(
             sheet: event.sheet, month: event.month, year: event.year);
         shout('Allregional Bloc', data);
+
         if (data is String) {
+          yield AllregionalError(data);
+        } else if (data == null) {
           yield AllregionalError(
               'Failed to fetch data. is your device online?');
         } else {
           yield AllregionalWeakLoaded(data);
         }
-      } on NetworkError {
+      } catch (_) {
         yield AllregionalError("Failed to fetch data. is your device online?");
       }
     } else if (event is FetchAllBiaya) {
       try {
         yield AllregionalLoading();
-        final data = await _apiRepository.fetchAllregionalList(
+        final data = await _apiProvider.fetchList(
             sheet: event.sheet, month: event.month, year: event.year);
         shout('Allregional Bloc', data);
+
         if (data is String) {
+          yield AllregionalError(data);
+        } else if (data == null) {
           yield AllregionalError(
               'Failed to fetch data. is your device online?');
         } else {
           yield AllregionalBiayaLoaded(data);
         }
-      } on NetworkError {
+      } catch (_) {
         yield AllregionalError("Failed to fetch data. is your device online?");
       }
     } else if (event is FetchAllFinal) {
       try {
         yield AllregionalLoading();
-        final data = await _apiRepository.fetchAllregionalList(
+        final data = await _apiProvider.fetchList(
             sheet: event.sheet, month: event.month, year: event.year);
         shout('Allregional Bloc', data);
+
         if (data is String) {
+          yield AllregionalError(data);
+        } else if (data == null) {
           yield AllregionalError(
               'Failed to fetch data. is your device online?');
         } else {
           yield AllregionalFinalLoaded(data);
         }
-      } on NetworkError {
+      } catch (_) {
         yield AllregionalError("Failed to fetch data. is your device online?");
       }
     } else if (event is FetchAllPph) {
       try {
         yield AllregionalLoading();
-        final data = await _apiRepository.fetchAllregionalList(
+        final data = await _apiProvider.fetchList(
             sheet: event.sheet, month: event.month, year: event.year);
         shout('Allregional Bloc', data);
+
         if (data is String) {
+          yield AllregionalError(data);
+        } else if (data == null) {
           yield AllregionalError(
               'Failed to fetch data. is your device online?');
         } else {
           yield AllregionalPphLoaded(data);
         }
-      } on NetworkError {
+      } catch (_) {
         yield AllregionalError("Failed to fetch data. is your device online?");
       }
     }

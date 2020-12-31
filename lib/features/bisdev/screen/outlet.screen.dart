@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nelongso_app/core/utils/colors_util.dart';
 import 'package:nelongso_app/core/utils/size_config.dart';
 import 'package:nelongso_app/core/widget/basic.appbar.dart';
 import 'package:nelongso_app/core/widget/failed.host.view.dart';
 import 'package:nelongso_app/core/widget/loading.page.indicator.dart';
+import 'package:nelongso_app/core/widget/dialog.custom.dart';
+import 'package:nelongso_app/core/widget/toast.custom.dart';
 import 'package:nelongso_app/features/bisdev/bloc/outlet_bloc.dart';
 import 'package:nelongso_app/features/bisdev/model/outlet.model.dart';
 
@@ -15,19 +18,19 @@ class OutletScreen extends StatefulWidget {
 
 class _OutletScreenState extends State<OutletScreen> {
   final OutletBloc _bloc = OutletBloc();
+  int yearSelected;
 
   @override
   void initState() {
-    _bloc.add(FetchAll());
     super.initState();
+    yearSelected = 0;
   }
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  List<String> yearLists = [null, '2020', '2021'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: ColorUtils.bgColor,
       appBar: PreferredSize(
         preferredSize: const Size(double.infinity, kToolbarHeight),
@@ -39,9 +42,12 @@ class _OutletScreenState extends State<OutletScreen> {
             appbarType: AppbarType.BACK_BUTTON,
             colorAppbarType: ColorUtils.whiteColor,
             bgcolor: ColorUtils.primaryColor,
-            title: "Investor Management",
+            title: "Outlet Profile",
             titlecolor: ColorUtils.lightColor,
             onClickEvent: () => Navigator.of(context).pop(),
+            actions: <Widget>[
+              _popupMenu(),
+            ],
           ),
         ),
       ),
@@ -49,22 +55,98 @@ class _OutletScreenState extends State<OutletScreen> {
     );
   }
 
-  void _showSnackBar(var text) {
-    scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(text)));
+  Widget _popupMenu() {
+    List<RadioModel> years = yearLists.map((e) {
+      var i = yearLists.indexOf(e);
+      return RadioModel(
+        id: i,
+        title: '$e',
+        subtitle: 'year',
+        value: '$e',
+      );
+    }).toList();
+
+    return PopupMenuButton(
+      onSelected: (value) {
+        switch (value) {
+          case 1:
+            return DialogCustom(context).selectRadioDialog(
+              data: years,
+              title: 'Years',
+              selected: yearSelected,
+              onChange: (val) => setState(() => yearSelected = val),
+            );
+          default:
+            Fluttertoast.showToast(
+              msg: "You have selected " + value.toString(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+            break;
+        }
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 1,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                child: Icon(Icons.calendar_today),
+              ),
+              Text('Year')
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildBloc() {
+    List<int> check = [yearSelected];
+    print(!check.contains(0));
+    if (check.contains(0)) {
+      return Container(
+        child: Center(
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.heightMultiplier * 2,
+                vertical: SizeConfig.widthMultiplier * 2,
+              ),
+              child: Text(
+                'Selected options more...',
+                style: TextStyle(
+                  fontSize: SizeConfig.textMultiplier * 2,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      _bloc.add(FetchAll(
+        year: yearLists[yearSelected],
+      ));
+    }
     return BlocProvider(
       create: (_) => _bloc,
       child: BlocListener<OutletBloc, OutletState>(
         listener: (context, state) {
+          final error = 'Year ${yearLists[yearSelected]}';
           if (state is OutletError) {
-            _showSnackBar(state.message);
+            ToastCustom(context).showDefault(msg: state.message);
           } else if (state is OutletLoaded) {
-            _showSnackBar(
-              'Load data Outlet Profiles',
-            );
+            ToastCustom(context).showDefault(msg: error.toString());
           }
         },
         child: BlocBuilder<OutletBloc, OutletState>(
@@ -76,7 +158,7 @@ class _OutletScreenState extends State<OutletScreen> {
             } else if (state is OutletLoaded) {
               return _buildCard(context, state.listOutlet);
             } else if (state is OutletError) {
-              return FailedHostView(state: state);
+              return FailedHostView(state: state.message);
             } else {
               return Container();
             }
@@ -111,8 +193,8 @@ class _OutletScreenState extends State<OutletScreen> {
               ],
             ),
             child: ListTile(
-              title: Text('${data.namaMitra}'),
-              subtitle: Text('${data.alamat}'),
+              title: Text('${data.namaOutlet}'),
+              subtitle: Text('${data.regional}'),
               onTap: () => _onTap(context, data),
               leading: Icon(
                 Icons.person,

@@ -19,7 +19,11 @@ class ListCardBasket extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _convertToKapital(string) {
-      return "${string.substring(0, 1).toUpperCase()}${string.substring(1).toLowerCase()}";
+      if (string.length > 0) {
+        return "${string.substring(0, 1).toUpperCase()}${string.substring(1).toLowerCase()}";
+      } else {
+        return '';
+      }
     }
 
     void _barWidget(BuildContext context, KetercapaianBasketModel _data) async {

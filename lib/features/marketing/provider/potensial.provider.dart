@@ -8,24 +8,32 @@ String _url = '';
 class PotensialProvider {
   var _dio = DioClientSingleton().dio;
   Future<dynamic> fetchList({String sheet, String year, String month}) async {
-    _url = '/division/marketing/sales/potensial/$sheet/$year/$month';
+    _url = '/api/v1/division/marketing/sales/potensial/$sheet/$year/$month';
+
     try {
       Response response = await _dio.get(_url);
       shout('fetchAllPotensialList', response);
-      if (response.statusCode == 200) {
-        if (sheet == 'JATIM 1' ||
-            sheet == 'JATIM 2' ||
-            sheet == 'JATIM 3' ||
-            sheet == 'JABAR') {
-          return (response.data['data'] as List)
-              .map((x) => KetercapaianRegionalModel.fromJson(x))
-              .toList();
+      if (response != null && response.data['name'] != null) {
+        String name = '${response.data['name']}'.toLowerCase();
+        if (name == 'success') {
+          if (response.statusCode == 200) {
+            if (sheet == 'JATIM 1' ||
+                sheet == 'JATIM 2' ||
+                sheet == 'JATIM 3' ||
+                sheet == 'JABAR') {
+              return (response.data['data'] as List)
+                  .map((x) => KetercapaianRegionalModel.fromJson(x))
+                  .toList();
+            }
+          }
+        } else {
+          return response.data['message'];
         }
       }
-      return 'Data not found or connection error';
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return 'Data not found or connection error';
+
+      return null;
+    } catch (_) {
+      return null;
     }
   }
 

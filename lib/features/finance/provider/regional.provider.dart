@@ -17,50 +17,54 @@ class RegionalProvider {
   Future<dynamic> fetchList(
       {String regional, String sheet, String year, String month}) async {
     _url =
-        '/division/keuangan/general/dashboard-regional/$regional/$sheet/$year/$month';
-
+        '/api/v1/division/keuangan/general/dashboard-regional/$regional/$sheet/$year/$month';
     try {
       Response response = await _dio.get(_url);
       shout('fetchRegionalList', response);
-      if (response.statusCode == 200) {
-        if (sheet == 'REKAP OUTLET BULANAN') {
-          return (response.data['data'] as List)
-              .map((x) => RegionalOutletModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'REKAP HPP SUPPLIER') {
-          return (response.data['data'] as List)
-              .map((x) => RegionalHppModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'REKAP OMZET OFFLINE & ONLINE') {
-          return (response.data['data'] as List)
-              .map((x) => RegionalOmzetofflineandonlineModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'REKAP KUNJUNGAN') {
-          return (response.data['data'] as List)
-              .map((x) => RegionalKunjunganModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'PERSENTASE KUNJUNGAN') {
-          return (response.data['data'] as List)
-              .map((x) => RegionalPersentaseKunjunganModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'REKAP OPERASIONAL') {
-          return (response.data['data'] as List)
-              .map((x) => RegionalOperasionalModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'REKAP OMZET PER SHIFT') {
-          return (response.data['data'] as List)
-              .map((x) => RegionalOmzetpershiftModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'REKAP MENU YANG TERJUAL') {
-          return (response.data['data'] as List)
-              .map((x) => RegionalMenuModel.fromJson(x))
-              .toList();
+      if (response != null && response.data['name'] != null) {
+        String name = '${response.data['name']}'.toLowerCase();
+        if (name == 'success') {
+          if (sheet == 'REKAP OUTLET BULANAN') {
+            return (response.data['data'] as List)
+                .map((x) => RegionalOutletModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'REKAP HPP SUPPLIER') {
+            return (response.data['data'] as List)
+                .map((x) => RegionalHppModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'REKAP OMZET OFFLINE & ONLINE') {
+            return (response.data['data'] as List)
+                .map((x) => RegionalOmzetofflineandonlineModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'REKAP KUNJUNGAN') {
+            return (response.data['data'] as List)
+                .map((x) => RegionalKunjunganModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'PERSENTASE KUNJUNGAN') {
+            return (response.data['data'] as List)
+                .map((x) => RegionalPersentaseKunjunganModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'REKAP OPERASIONAL') {
+            return (response.data['data'] as List)
+                .map((x) => RegionalOperasionalModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'REKAP OMZET PER SHIFT') {
+            return (response.data['data'] as List)
+                .map((x) => RegionalOmzetpershiftModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'REKAP MENU YANG TERJUAL') {
+            return (response.data['data'] as List)
+                .map((x) => RegionalMenuModel.fromJson(x))
+                .toList();
+          }
+        } else {
+          return response.data['message'].toString();
         }
       }
-      return 'Data not found or connection error';
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return 'Data not found or connection error';
+
+      return null;
+    } on DioError catch (_) {
+      return null;
     }
   }
 

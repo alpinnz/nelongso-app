@@ -18,9 +18,9 @@ class FailedHostView extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Text(
-            state.errMessage.contains("Failed host")
+            state.message.contains("Failed host")
                 ? "Tidak dapat menampilkan data, periksa koneksi Anda"
-                : state.errMessage,
+                : state.message,
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: SizeConfig.textMultiplier * 3,

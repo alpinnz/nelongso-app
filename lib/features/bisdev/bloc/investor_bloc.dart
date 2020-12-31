@@ -21,7 +21,7 @@ class InvestorBloc extends Bloc<InvestorEvent, InvestorState> {
     if (event is FetchAll) {
       try {
         yield InvestorLoading();
-        final data = await _apiRepository.fetchInvestoryList();
+        final data = await _apiRepository.fetchInvestoryList(year: event.year);
         shout('InvestorBloc', data);
         if (data.isNotEmpty || !data is String) {
           yield InvestorLoaded(data);

@@ -25,10 +25,7 @@ class _NoncashScreenState extends State<NoncashScreen> {
   int yearSelected = 0;
   int monthSelected = 0;
   int sheetSelected = 0;
-  List<String> yearLists = [
-    null,
-    '2020',
-  ];
+  List<String> yearLists = [null, '2020', '2021'];
   List<String> monthLists = [
     null,
     '1',
@@ -295,12 +292,8 @@ class _NoncashScreenState extends State<NoncashScreen> {
         create: (_) => _bloc,
         child: BlocListener<NoncashBloc, NoncashState>(
           listener: (context, state) {
-            final error =
-                'Year ${yearLists[yearSelected]}, Month ${monthLists[monthSelected]}, Sheet ${sheetLists[sheetSelected]}';
             if (state is NoncashError) {
               ToastCustom(context).showDefault(msg: state.message);
-            } else if (state is! NoncashInitial || state is! NoncashLoading) {
-              ToastCustom(context).showDefault(msg: error.toString());
             }
           },
           child: BlocBuilder<NoncashBloc, NoncashState>(
@@ -310,7 +303,7 @@ class _NoncashScreenState extends State<NoncashScreen> {
               } else if (state is NoncashLoading) {
                 return Center(child: LoadingPageIndicator());
               } else if (state is NoncashError) {
-                return FailedHostView(state: state.message);
+                return FailedHostView(state: state);
               } else if (state is NoncashGorestoLoaded) {
                 return ListCardGoresto(
                   model: state.noncashGoresto,

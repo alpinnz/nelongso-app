@@ -23,13 +23,10 @@ class AllRegionalScreen extends StatefulWidget {
 
 class _AllRegionalScreenState extends State<AllRegionalScreen> {
   final AllregionalBloc _bloc = AllregionalBloc();
-  int yearSelected = 1;
-  int monthSelected = 10;
-  int sheetSelected = 1;
-  List<String> yearLists = [
-    null,
-    '2020',
-  ];
+  int yearSelected = 0;
+  int monthSelected = 0;
+  int sheetSelected = 0;
+  List<String> yearLists = [null, '2020', '2021'];
   List<String> monthLists = [
     null,
     '1',
@@ -311,13 +308,8 @@ class _AllRegionalScreenState extends State<AllRegionalScreen> {
         create: (_) => _bloc,
         child: BlocListener<AllregionalBloc, AllregionalState>(
           listener: (context, state) {
-            final error =
-                'Year ${yearLists[yearSelected]}, Month ${monthLists[monthSelected]}, Sheet ${sheetLists[sheetSelected]}';
             if (state is AllregionalError) {
               ToastCustom(context).showDefault(msg: state.message);
-            } else if (state is! AllregionalInitial ||
-                state is! AllregionalLoading) {
-              ToastCustom(context).showDefault(msg: error.toString());
             }
           },
           child: BlocBuilder<AllregionalBloc, AllregionalState>(
@@ -327,7 +319,7 @@ class _AllRegionalScreenState extends State<AllRegionalScreen> {
               } else if (state is AllregionalLoading) {
                 return Center(child: LoadingPageIndicator());
               } else if (state is AllregionalError) {
-                return FailedHostView(state: state.message);
+                return FailedHostView(state: state);
               } else if (state is AllregionalDataLoaded) {
                 return ListCardData(
                   model: state.allregionalDataModel,

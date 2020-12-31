@@ -30,10 +30,7 @@ class _SalesTrendScreenState extends State<SalesTrendScreen> {
     sheetSelected = 0;
   }
 
-  List<String> yearLists = [
-    null,
-    '2020',
-  ];
+  List<String> yearLists = [null, '2020', '2021'];
   List<String> sheetLists = [
     null,
     "TREND OMZET",
@@ -211,12 +208,8 @@ class _SalesTrendScreenState extends State<SalesTrendScreen> {
       create: (_) => _bloc,
       child: BlocListener<TrendBloc, TrendState>(
         listener: (context, state) {
-          final error =
-              'Year ${yearLists[yearSelected]}, Sheet ${sheetLists[sheetSelected]}';
           if (state is TrendError) {
             ToastCustom(context).showDefault(msg: state.message);
-          } else {
-            ToastCustom(context).showDefault(msg: error.toString());
           }
         },
         child: BlocBuilder<TrendBloc, TrendState>(
@@ -244,7 +237,7 @@ class _SalesTrendScreenState extends State<SalesTrendScreen> {
                 year: int.parse(yearLists[yearSelected]),
               );
             } else if (state is TrendError) {
-              return FailedHostView(state: state.message);
+              return FailedHostView(state: state);
             } else {
               return Container();
             }

@@ -21,10 +21,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   final AnalyticsBloc _bloc = AnalyticsBloc();
   int yearSelected = 0;
   int sheetSelected = 0;
-  List<String> yearLists = [
-    null,
-    '2020',
-  ];
+  List<String> yearLists = [null, '2020', '2021'];
   List<String> sheetLists = [
     null,
     'TARGET OMZET',
@@ -195,14 +192,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         create: (_) => _bloc,
         child: BlocListener<AnalyticsBloc, AnalyticsState>(
           listener: (context, state) {
-            final error =
-                'Year ${yearLists[yearSelected]}, Sheet ${sheetLists[sheetSelected]}';
             if (state is AnalyticsError) {
               ToastCustom(context).showDefault(msg: state.message);
-            } else if (state is AnalyticsTargetLoaded) {
-              ToastCustom(context).showDefault(msg: error.toString());
-            } else if (state is AnalyticsMonthLoaded) {
-              ToastCustom(context).showDefault(msg: error.toString());
             }
           },
           child: BlocBuilder<AnalyticsBloc, AnalyticsState>(
@@ -224,7 +215,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   year: int.parse(yearLists[yearSelected]),
                 );
               } else if (state is AnalyticsError) {
-                return FailedHostView(state: state.message);
+                return FailedHostView(state: state);
               } else {
                 return Container();
               }

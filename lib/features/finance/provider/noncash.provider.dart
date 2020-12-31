@@ -12,37 +12,43 @@ String _url = '';
 class NoncashProvider {
   var _dio = DioClientSingleton().dio;
   Future<dynamic> fetchList({String sheet, String year, String month}) async {
-    _url = '/division/keuangan/general/dashboard-non-cash/$sheet/$year/$month';
+    _url =
+        '/api/v1/division/keuangan/general/dashboard-non-cash/$sheet/$year/$month';
+
     try {
       Response response = await _dio.get(_url);
       shout('fetchNonCashList', response);
-      if (response.statusCode == 200) {
-        if (sheet == 'GORESTO') {
-          return (response.data['data'] as List)
-              .map((x) => NoncashGorestoModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'GRABRESTO') {
-          return (response.data['data'] as List)
-              .map((x) => NoncashGrabrestoModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'GOJEK & GRAB') {
-          return (response.data['data'] as List)
-              .map((x) => NoncashGojekandgrabModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'SALDO GRABRESTO') {
-          return (response.data['data'] as List)
-              .map((x) => NoncashSaldograbrestoModel.fromJson(x))
-              .toList();
-        } else if (sheet == 'SALDO GORESTO') {
-          return (response.data['data'] as List)
-              .map((x) => NoncashSaldogorestoModel.fromJson(x))
-              .toList();
+      if (response != null && response.data['name'] != null) {
+        String name = '${response.data['name']}'.toLowerCase();
+        if (name == 'success') {
+          if (sheet == 'GORESTO') {
+            return (response.data['data'] as List)
+                .map((x) => NoncashGorestoModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'GRABRESTO') {
+            return (response.data['data'] as List)
+                .map((x) => NoncashGrabrestoModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'GOJEK & GRAB') {
+            return (response.data['data'] as List)
+                .map((x) => NoncashGojekandgrabModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'SALDO GRABRESTO') {
+            return (response.data['data'] as List)
+                .map((x) => NoncashSaldograbrestoModel.fromJson(x))
+                .toList();
+          } else if (sheet == 'SALDO GORESTO') {
+            return (response.data['data'] as List)
+                .map((x) => NoncashSaldogorestoModel.fromJson(x))
+                .toList();
+          }
+        } else {
+          return response.data['message'];
         }
       }
-      return 'Data not found or connection error';
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return 'Data not found or connection error';
+      return null;
+    } catch (_) {
+      return null;
     }
   }
 

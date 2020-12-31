@@ -45,10 +45,7 @@ class _RegionalScreenState extends State<RegionalScreen> {
     'jatim2',
     'jatim3',
   ];
-  List<String> yearLists = [
-    null,
-    '2020',
-  ];
+  List<String> yearLists = [null, '2020', '2021'];
   List<String> monthLists = [
     null,
     '1',
@@ -381,12 +378,8 @@ class _RegionalScreenState extends State<RegionalScreen> {
         create: (_) => _bloc,
         child: BlocListener<RegionalBloc, RegionalState>(
           listener: (context, state) {
-            final error =
-                'Year ${yearLists[yearSelected]}, Month ${monthLists[monthSelected]}, Sheet ${sheetLists[sheetSelected]}';
             if (state is RegionalError) {
               ToastCustom(context).showDefault(msg: state.message);
-            } else if (state is! RegionalInitial || state is! RegionalLoading) {
-              ToastCustom(context).showDefault(msg: error.toString());
             }
           },
           child: BlocBuilder<RegionalBloc, RegionalState>(
@@ -396,7 +389,7 @@ class _RegionalScreenState extends State<RegionalScreen> {
               } else if (state is RegionalLoading) {
                 return Center(child: LoadingPageIndicator());
               } else if (state is RegionalError) {
-                return FailedHostView(state: state.message);
+                return FailedHostView(state: state);
               } else if (state is RegionalOutletLoaded) {
                 return ListCardOutlet(
                   model: state.regionalOutlet,
