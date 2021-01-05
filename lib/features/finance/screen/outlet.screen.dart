@@ -158,7 +158,7 @@ class _OutletScreenState extends State<OutletScreen> {
             } else if (state is OutletLoaded) {
               return _buildCard(context, state.listOutlet);
             } else if (state is OutletError) {
-              return FailedHostView(state: state.message);
+              return FailedHostView(state: state);
             } else {
               return Container();
             }

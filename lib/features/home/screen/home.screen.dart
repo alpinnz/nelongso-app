@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
           right: false,
           bottom: false,
           child: BasicAppbar(
-            appbarType: AppbarType.BACK_BUTTON,
+            appbarType: AppbarType.NOTHING,
             colorAppbarType: ColorUtils.whiteColor,
             bgcolor: ColorUtils.primaryColor,
             title: "Home",

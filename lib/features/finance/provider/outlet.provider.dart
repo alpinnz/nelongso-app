@@ -3,12 +3,13 @@ import 'package:nelongso_app/config/dio.client.singleton.dart';
 import 'package:nelongso_app/core/helper/InspectTool.dart';
 import 'package:nelongso_app/features/finance/model/outlet.model.dart';
 
-final String _url = '/api/v1/division/keuangan/outlet-profiles';
+String _url = '';
 
 class OutletProvider {
   var _dio = DioClientSingleton().dio;
-  Future<dynamic> fetchList() async {
+  Future<dynamic> fetchList({String year}) async {
     try {
+      _url = '/api/v1/division/keuangan/outlet-profiles/$year';
       Response response = await _dio.get(_url);
       shout('fetchOutletList', response);
 

@@ -62,7 +62,7 @@ class _SalesPotensialScreenState extends State<SalesPotensialScreen> {
             appbarType: AppbarType.BACK_BUTTON,
             colorAppbarType: ColorUtils.whiteColor,
             bgcolor: ColorUtils.primaryColor,
-            title: "Data Ketercapaian",
+            title: "Potensial",
             titlecolor: ColorUtils.lightColor,
             onClickEvent: () => Navigator.of(context).pop(),
             actions: <Widget>[

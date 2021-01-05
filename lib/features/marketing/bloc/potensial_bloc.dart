@@ -34,7 +34,8 @@ class PotensialBloc extends Bloc<PotensialEvent, PotensialState> {
         } else {
           yield PotensialRegionalLoaded(data);
         }
-      } catch (_) {
+      } catch (e) {
+        shout('error : ', e.toString());
         yield PotensialError("Failed to fetch data. is your device online?");
       }
     }
